@@ -25,7 +25,7 @@ env:
 
 
 # s3 bucket for the infra state
-  BUCKET_TF_STATE: ${{secret.BUCKET_TF_STATE}}
+  BUCKET_TF_STATE: ${{secrets.BUCKET_TF_STATE}}
   AWS_REGION: us-east-1
 
 
