@@ -16,6 +16,7 @@ on:
 #       - IAC/**
 #       - app/**
 
+
 env:
 # credentials to access aws
 AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
