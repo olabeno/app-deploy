@@ -18,15 +18,15 @@ on:
 
 env:
 # credentials to access aws
-AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+  AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+  AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
 
-SSH_KEY: ${{secrets.EC2_PRIVATE_KEY}}
+  SSH_KEY: ${{secrets.EC2_PRIVATE_KEY}}
 
 
 # s3 bucket for the infra state
-BUCKET_TF_STATE: ${{secret.BUCKET_TF_STATE}}
-AWS_REGION: us-east-1
+  BUCKET_TF_STATE: ${{secret.BUCKET_TF_STATE}}
+  AWS_REGION: us-east-1
 
 
 jobs:
