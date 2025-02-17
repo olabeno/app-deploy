@@ -35,9 +35,9 @@ jobs:
     runs-on: ubutu-latest
     defaults:
      run:
-       shell: bash
-       working-directory: ./terraform
-    steps:
+        shell: bash
+        working-directory: ./terraform
+     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
 
