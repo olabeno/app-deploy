@@ -1,0 +1,106 @@
+name: "IAC & APP"
+on:
+  workflow_dispatch
+# on:
+#   push:
+#     branches:
+#       - main
+#       - dev-branch
+#     paths:
+#       - IAC/**
+#       - app/**
+#   pull_request:
+#     branches:
+#       - main
+#     paths:
+#       - IAC/**
+#       - app/**
+
+env:
+# credentials to access aws
+AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+
+SSH_KEY: ${{secrets.EC2_PRIVATE_KEY}}
+
+
+# s3 bucket for the infra state
+BUCKET_TF_STATE: ${{secret.BUCKET_TF_STATE}}
+AWS_REGION: us-east-1
+
+
+jobs:
+  terraform:
+    name: "Apply terraform code changes"
+    runs-on: ubutu-latest
+    defaults:
+     run:
+       shell: bash
+       working-directory: ./terraform
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup terraform  with specified version on this runner
+        uses: hashicorp/setup-terraform@v3
+        #with:
+        #  terraform_version: "1.10.5"
+     
+      - name: Terraform init
+        id: init
+        run: terraform init -backend-config="bucket=$BUCKET_TF_STATE" -backend-config="key=terraform.tfstate" -backend-config="region=$AWS_REGION"
+
+      - name: Terraform format
+        id: fmt
+        run: terraform init -check
+
+      - name: Terraform validate
+        id: validate
+        run: terraform validate
+
+      - name: Terraform plan
+        id: plan
+        run: terraform plan -no-color -input-false -out planfile
+        continue-on-error: true
+
+      - name: Terraform plan status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
+
+      - name: Terraform apply
+        id: t-apply
+        run: terraform apply -auto-approve -input=false -parallelism=1 planfile
+
+      # - name: Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     aws_access_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
+      #     aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+      #     aws-region: $AWS_REGION
+
+      - name: Get microk8s kube config ile
+        id: getconfig
+        if: steps.t-apply.outcome == 'success'
+        run: |
+          mkdir -p ~/.kube
+          EC2_HOST=$(terraform output -raw ec2_public_ip)
+          ssh -o StrictHostKeyChecking=no -i "${{secrets.EC2_PRIVATE_KEY}}" ubuntu@$EC2_HOST << 'EOF'
+            sudo microk8s.kubectl config view --raw > kubeconfig
+            sudo chown ubuntu:ubuntu kubeconfig
+          EOF
+          scp -o StrictHostKeyChecking=no -i "${{secrets.EC2_PRIVATE_KEY}}" ubuntu@${{secrets.EC2_HOST}}:~/kubeconfig ~/.kube/config
+          export KUBECONFIG=~/.kube/config
+          echo "KUBECONFIG=~/.kube/config" >> $GITHUB_ENV
+        shell: bash
+
+
+          
+
+
+
+
+
+
+
+
+    
