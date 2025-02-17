@@ -53,7 +53,7 @@ jobs:
         #  ssh-keyscan -H your-ec2-ip-address >> ~/.ssh/known_hosts
 
       - name: Initialize Terraform with S3 Backend
-        run: terraform init -backend-config="bucket=${{ env.S3_BUCKET_NAME }}" -backend-config="dynamodb_table=${{ env.DYNAMODB_TABLE }}" -backend-config="region=${{ env.AWS_REGION }}"
+        run: terraform init -backend-config="bucket=${{secrets.BUCKET_TF_STATE}}" 
 
       - name: Validate Terraform Configuration
         run: terraform validate
