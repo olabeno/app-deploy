@@ -59,7 +59,7 @@ jobs:
         run: terraform validate
 
       - name: Generate Terraform Plan
-        run: terraform plan -no-color -input-false -out planfile
+        run: terraform plan -no-color -input=false -out planfile
 
       # - name: Apply Terraform Configuration
       #   run: terraform apply -auto-approve tfplan
