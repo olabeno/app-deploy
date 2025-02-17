@@ -16,56 +16,55 @@ on:
       - app/**
 
 
-env:
-# credentials to access aws
-  AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-  AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+jobs:
+  terraform:
+    name: "Apply terraform code changes"
+    runs-on: ubutu-latest
+    env:
+      # credentials to access aws
+      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
 
-  SSH_KEY: ${{secrets.EC2_PRIVATE_KEY}}
+      SSH_KEY: ${{secrets.EC2_PRIVATE_KEY}}
 
 
-# s3 bucket for the infra state
-  BUCKET_TF_STATE: ${{secrets.BUCKET_TF_STATE}}
-  AWS_REGION: us-east-1
+      # s3 bucket for the infra state
+      BUCKET_TF_STATE: ${{secrets.BUCKET_TF_STATE}}
+      AWS_REGION: us-east-1
 
-
-  jobs:
-    terraform:
-      name: "Apply terraform code changes"
-      runs-on: ubutu-latest
-      defaults:
+    defaults:
        run:
          shell: bash
          working-directory: ./terraform
-      steps:
-        - name: Checkout source code
-          uses: actions/checkout@v4
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
 
-        - name: Setup terraform  with specified version on this runner
-          uses: hashicorp/setup-terraform@v3
+      - name: Setup terraform  with specified version on this runner
+        uses: hashicorp/setup-terraform@v3
         #with:
         #  terraform_version: "1.10.5"
      
-        - name: Terraform init
-          id: init
-          run: terraform init -backend-config="bucket=$BUCKET_TF_STATE" -backend-config="key=terraform.tfstate" -backend-config="region=$AWS_REGION"
+      - name: Terraform init
+        id: init
+        run: terraform init -backend-config="bucket=$BUCKET_TF_STATE" -backend-config="key=terraform.tfstate" -backend-config="region=$AWS_REGION"
 
-        - name: Terraform format
-          id: fmt
-          run: terraform init -check
+      - name: Terraform format
+        id: fmt
+        run: terraform init -check
 
-        - name: Terraform validate
-          id: validate
-          run: terraform validate
+      - name: Terraform validate
+        id: validate
+        run: terraform validate
 
-        - name: Terraform plan
-          id: plan
-          run: terraform plan -no-color -input-false -out planfile
-          continue-on-error: true
+      - name: Terraform plan
+        id: plan
+        run: terraform plan -no-color -input-false -out planfile
+        continue-on-error: true
 
-        - name: Terraform plan status
-          if: steps.plan.outcome == 'failure'
-          run: exit 1
+      - name: Terraform plan status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
 
       # - name: Terraform apply
       #   id: t-apply
