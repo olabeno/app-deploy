@@ -27,12 +27,7 @@ jobs:
       
       BUCKET_TF_STATE: ${{ secrets.BUCKET_TF_STATE }}
       AWS_REGION: us-east-1
-     
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./terraform
-
+        
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -49,13 +44,6 @@ jobs:
           aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Configure SSH for EC2 Access
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-        #  ssh-keyscan -H your-ec2-ip-address >> ~/.ssh/known_hosts
-
       - name: Initialize Terraform with S3 Backend
         id: tf-init
         run: terraform init -backend-config="bucket=${{env.BUCKET_TF_STATE}}" -backend-config=${{ env.AWS_REGION }} 
@@ -70,6 +58,13 @@ jobs:
 
       # - name: Apply Terraform Configuration
       #   run: terraform apply -auto-approve tfplan
+
+      # - name: Configure SSH for EC2 Access
+      #   run: |
+      #     mkdir -p ~/.ssh
+      #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+      #     chmod 600 ~/.ssh/id_rsa
+      #   #  ssh-keyscan -H your-ec2-ip-address >> ~/.ssh/known_hosts
 
 
 # jobs:
