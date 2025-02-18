@@ -1,19 +1,19 @@
 name: IAC & APP Deployment and Cleanup
 
 on:
-  push:
-    branches:
-      - main
-      - dev-branch
-    paths:
-      - IAC/**
-      - app/**
-  pull_request:
-    branches:
-      - main
-    paths:
-      - IAC/**
-      - app/**
+  # push:
+  #   branches:
+  #     - main
+  #     - dev-branch
+  #   paths:
+  #     - IAC/**
+  #     - app/**
+  # pull_request:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - IAC/**
+  #     - app/**
 
   workflow_dispatch:
 
