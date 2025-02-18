@@ -15,8 +15,7 @@ on:
       - IAC/**
       - app/**
 
-  workflow_dispatch:    
-
+  workflow_dispatch:
 
 jobs:
   terraform-construct:
