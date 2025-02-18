@@ -1,4 +1,4 @@
-name: "IAC & APP"
+name: IAC & APP Deployment and Cleanup
 
 on:
   push:
