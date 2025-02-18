@@ -36,4 +36,7 @@ resource "aws_security_group" "microk8s_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+ tags = {
+    Name = "MicroK8s-Instance"
+  }
 }
