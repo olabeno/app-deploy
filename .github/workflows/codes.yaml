@@ -70,15 +70,15 @@ jobs:
         id: kube-cluster-ip
         run: echo $(terraform output -raw ec2_public_ip) > EC2_HOST
 
-      - name: Setup SSH Key and Connect to EC2
-        run: |
-          # Create SSH directory
-          mkdir -p ~/.ssh
-          echo "${{secrets.EC2_PRIVATE_KEY}}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+      # - name: Setup SSH Key and Connect to EC2
+      #   run: |
+      #     # Create SSH directory
+      #     mkdir -p ~/.ssh
+      #     echo "${{secrets.EC2_PRIVATE_KEY}}" > ~/.ssh/id_rsa
+      #     chmod 600 ~/.ssh/id_rsa
 
-          # Add EC2 host to known hosts
-          ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
+      #     # Add EC2 host to known hosts
+      #     ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
 
       - name: Copy MicroK8s Kubeconfig from EC2
         run: |
