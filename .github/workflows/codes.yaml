@@ -1,20 +1,19 @@
 name: IAC & APP Deployment and Cleanup
 
 on:
-  # push:
-  #   branches:
-  #     - main
-  #     - dev-branch
-  #   paths:
-  #     - IAC/**
-  #     - app/**
-  # pull_request:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - IAC/**
-  #     - app/**
-
+  push:
+    branches:
+      - main
+      - dev-branch
+    paths:
+      - IAC/**
+      - app/**
+  pull_request:
+    branches:
+      - main
+    paths:
+      - IAC/**
+      - app/**
   workflow_dispatch:
 
 jobs:
@@ -86,7 +85,7 @@ jobs:
     name: Terraform Destroy
     runs-on: ubuntu-latest
     needs: terraform-construct
-    if: github.event.inputs.destroy == 'true' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch'
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
