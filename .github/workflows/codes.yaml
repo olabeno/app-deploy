@@ -56,15 +56,34 @@ jobs:
       - name: Generate Terraform Plan
         id: tfplan
         if: steps.tf-init.outcome == 'success'
-        run: terraform plan -no-color -input=false -out=tf-paln
-        working-directory: IAC 
-
-      # - name: Apply Terraform Configuration
-      #   run: terraform apply -auto-approve tfplan
+        run: terraform plan -no-color -input=false -out=tf-plan
+        working-directory: IAC
+        
+      - name: Apply Terraform Configuration
+        id: tfapply
+        if: steps.tfplan.outcome == 'success'
+        run: terraform apply -auto-approve tf-plan
+        working-directory: IAC
 
       # - name: Configure SSH for EC2 Access
+      #   id: ec2-access
+      #   if: steps.tfapply.outcome == 'success'
       #   run: |
       #     mkdir -p ~/.ssh
+      #     EC2_HOST=$(terraform output -raw ec2_public_ip)
+      #     ssh -o StrictHostKeyChecking=no -i "${{secrets.EC2_PRIVATE_KEY}}" ubuntu@$EC2_HOST << 'EOF'
+      #       sudo microk8s.kubectl config view --raw > kubeconfig
+      #       sudo chown ubuntu:ubuntu kubeconfig
+      #     EOF
+      #     scp -o StrictHostKeyChecking=no -i "${{secrets.EC2_PRIVATE_KEY}}" ubuntu@${{secrets.EC2_HOST}}:~/kubeconfig ~/.kube/config
+      #     export KUBECONFIG=~/.kube/config
+      #     echo "KUBECONFIG=~/.kube/config" >> $GITHUB_ENV
+      #   shell: bash
+      #   working-directory: .github/workflows
+
+
+
+          
       #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
       #     chmod 600 ~/.ssh/id_rsa
       #   #  ssh-keyscan -H your-ec2-ip-address >> ~/.ssh/known_hosts
