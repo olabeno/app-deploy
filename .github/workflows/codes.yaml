@@ -27,6 +27,7 @@ jobs:
       
       BUCKET_TF_STATE: ${{ secrets.BUCKET_TF_STATE }}
       AWS_REGION: us-east-1
+      #KUBECONFIG: ~/.kube/
         
     steps:
       - name: Checkout Repository
@@ -65,24 +66,27 @@ jobs:
         run: terraform apply -auto-approve tf-plan
         working-directory: IAC
 
-      # - name: Get microk8s EC2 IP address
-      #   id: kube-cluster-ip
-      #   run: echo $(terraform output -raw ec2_public_ip) > EC2_HOST
+      - name: Get microk8s EC2 IP address
+        id: kube-cluster-ip
+        run: echo $(terraform output -raw ec2_public_ip) > EC2_HOST
 
-      # - name: Setup SSH Key and Connect to EC2
-      #   run: |
-      #     # Create SSH directory
-      #     mkdir -p ~/.ssh
-      #     echo "${{secrets.EC2_PRIVATE_KEY}}" > ~/.ssh/id_rsa
-      #     chmod 600 ~/.ssh/id_rsa
+      - name: Setup SSH Key and Connect to EC2
+        run: |
+          # Create SSH directory
+          mkdir -p ~/.ssh
+          echo "${{secrets.EC2_PRIVATE_KEY}}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
-      #     # Add EC2 host to known hosts
-      #     ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
+          # Add EC2 host to known hosts
+          ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
 
-      # - name: Copy MicroK8s Kubeconfig from EC2
-      #   run: |
-      #     scp -i ${{secrets.EC2_PRIVATE_KEY}} ubuntu@EC2_HOST:~/.kube/config ~/.kube/config
-      #     chmod 600 ~/.kube/config
+      - name: Copy MicroK8s Kubeconfig from EC2
+        run: |
+          scp -i ${{secrets.EC2_PRIVATE_KEY}} ubuntu@EC2_HOST:~/.kube/config ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Try Kubernetes cli command from here
+        run: microk8s kubectl get ns
 
     
 
