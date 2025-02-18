@@ -81,7 +81,7 @@ jobs:
 
       # - name: Copy MicroK8s Kubeconfig from EC2
       #   run: |
-      #     scp -i ${{secrets.EC2_PRIVATE_KEY}} ubuntu@EC2_HOST:/var/snap/microk8s/current/credentials/client.config ~/.kube/config
+      #     scp -i ${{secrets.EC2_PRIVATE_KEY}} ubuntu@EC2_HOST:~/.kube/config ~/.kube/config
       #     chmod 600 ~/.kube/config
 
     
