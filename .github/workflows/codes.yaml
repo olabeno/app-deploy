@@ -47,14 +47,17 @@ jobs:
       - name: Initialize Terraform with S3 Backend
         id: tf-init
         run: terraform init -backend-config="bucket=${{env.BUCKET_TF_STATE}}" -backend-config=${{ env.AWS_REGION }} 
+        working-directory: IAC 
 
       - name: Validate Terraform Configuration
         run: terraform validate
+        working-directory: IAC 
 
       - name: Generate Terraform Plan
         id: tfplan
         if: steps.tf-init.outcome == 'success'
-        run: terraform plan -no-color -input=false -out=planfile
+        run: terraform plan -no-color -input=false -out=tf-paln
+        working-directory: IAC 
 
       # - name: Apply Terraform Configuration
       #   run: terraform apply -auto-approve tfplan
