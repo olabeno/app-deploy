@@ -16,7 +16,6 @@ on:
       - IAC/**
       - app/**
   
-
 jobs:
   terraform-construct:
     name: Terraform Deployment
@@ -66,23 +65,95 @@ jobs:
         run: terraform apply -auto-approve tf-plan
         working-directory: IAC
 
-      # - name: Configure SSH for EC2 Access
-      #   id: ec2-access
-      #   if: steps.tfapply.outcome == 'success'
-      #   run: |
-      #     mkdir -p ~/.ssh
-      #     EC2_HOST=$(terraform output -raw ec2_public_ip)
-      #     ssh -o StrictHostKeyChecking=no -i "${{secrets.EC2_PRIVATE_KEY}}" ubuntu@$EC2_HOST << 'EOF'
-      #       sudo microk8s.kubectl config view --raw > kubeconfig
-      #       sudo chown ubuntu:ubuntu kubeconfig
-      #     EOF
-      #     scp -o StrictHostKeyChecking=no -i "${{secrets.EC2_PRIVATE_KEY}}" ubuntu@${{secrets.EC2_HOST}}:~/kubeconfig ~/.kube/config
-      #     export KUBECONFIG=~/.kube/config
-      #     echo "KUBECONFIG=~/.kube/config" >> $GITHUB_ENV
-      #   shell: bash
-      #   working-directory: .github/workflows
+      # - name: Get microk8s EC2 IP address
+      #   id: kube-cluster-ip
+      #   run: echo $(terraform output -raw ec2_public_ip) > EC2_HOST
 
-  # terraform-destroy:
+      # - name: Setup SSH Key and Connect to EC2
+      #   run: |
+      #     # Create SSH directory
+      #     mkdir -p ~/.ssh
+      #     echo "${{secrets.EC2_PRIVATE_KEY}}" > ~/.ssh/id_rsa
+      #     chmod 600 ~/.ssh/id_rsa
+
+      #     # Add EC2 host to known hosts
+      #     ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
+
+      # - name: Copy MicroK8s Kubeconfig from EC2
+      #   run: |
+      #     scp -i ${{secrets.EC2_PRIVATE_KEY}} ubuntu@EC2_HOST:/var/snap/microk8s/current/credentials/client.config ~/.kube/config
+      #     chmod 600 ~/.kube/config
+
+    
+
+
+      
+
+#-------------------------------------------------------------#
+
+    
+
+      # - name: Get microk8s ec2 instance ip address
+      #   run: echo $(terraform output -raw ec2_public_ip) > EC2_HOST.txt
+      #   working-directory: IAC
+
+      # - name: Upload EC2_HOST.txt File as Artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: microk8s-ip
+      #     path: EC2_HOST.txt
+        
+      
+  # setup-kubeconfig:
+  #   name: Setup Kubeconfig from microk8s EC2 instance
+  #   runs-on: ubuntu-latest
+  #   needs: terraform-construct
+
+  #   env:
+  #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      
+  #     BUCKET_TF_STATE: ${{ secrets.BUCKET_TF_STATE }}
+  #     LOCAL_KUBECONFIG: "$HOME/.kube/config"
+  #     AWS_REGION: us-east-1
+
+  #   steps:
+  #   - name: Checkout Repository
+  #     uses: actions/checkout@v4
+
+  #   - name: Download EC2_HOST.txt File
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: microk8s-ip
+
+  #   - name: Read and Export Variable
+  #     run: |
+  #         source EC2_HOST.txt
+  #         cat EC2_HOST.txt >> $EC2_HOST
+  #   - name: Create ~/.kube Directory
+  #     run: mkdir -p ~/.kube
+
+  #   - name: Setup SSH Key and Connect to EC2
+  #     run: |
+  #         # Create SSH directory
+  #         mkdir -p ~/.ssh
+  #         echo "${{secrets.EC2_PRIVATE_KEY}}" > ~/.ssh/id_rsa
+  #         chmod 600 ~/.ssh/id_rsa
+
+  #         # Add EC2 host to known hosts
+  #         ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts  
+
+  #   - name: Copy MicroK8s Kubeconfig from EC2
+  #     run: |
+  #         scp -i ${{secrets.EC2_PRIVATE_KEY}} ubuntu@EC2_HOST:/var/snap/microk8s/current/credentials/client.config ~/.kube/config
+  #         chmod 600 ~/.kube/config
+
+  #   - name: Export KUBECONFIG for Workflow
+  #     run: echo "KUBECONFIG=$HOME/.kube/config" >> $GITHUB_ENV
+
+
+       
+  # Cleanup:
   #   name: Terraform Destroy
   #   runs-on: ubuntu-latest
   #   needs: terraform-construct
