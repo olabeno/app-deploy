@@ -15,9 +15,11 @@ on:
       - IAC/**
       - app/**
 
+  workflow_dispatch:    
+
 
 jobs:
-  terraform:
+  terraform-construct:
     name: Terraform Deployment
     runs-on: ubuntu-latest
 
@@ -81,9 +83,44 @@ jobs:
       #   shell: bash
       #   working-directory: .github/workflows
 
-
-
+  terraform-destroy:
+    name: Terraform Destroy
+    runs-on: ubuntu-latest
+    needs: terraform-construct
+    if: github.event.inputs.destroy == 'true' || github.event_name == 'workflow_dispatch'
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      
+      BUCKET_TF_STATE: ${{ secrets.BUCKET_TF_STATE }}
+      AWS_REGION: us-east-1
           
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: latest
+  
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}    
+
+      - name: Initialize Terraform with S3 Backend
+        id: tf-init
+        run: terraform init   
+        working-directory: IAC 
+
+      - name: Destroy Terraform Resources
+        run: terraform destroy -auto-approve
+        working-directory: IAC
+      
+      
       #     echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
       #     chmod 600 ~/.ssh/id_rsa
       #   #  ssh-keyscan -H your-ec2-ip-address >> ~/.ssh/known_hosts
