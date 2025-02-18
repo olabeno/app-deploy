@@ -46,7 +46,7 @@ jobs:
 
       - name: Initialize Terraform with S3 Backend
         id: tf-init
-        run: terraform init -backend-config="bucket=${{env.BUCKET_TF_STATE}}" -backend-config=${{ env.AWS_REGION }} 
+        run: terraform init -backend-config="bucket=${{env.BUCKET_TF_STATE}}"  
         working-directory: IAC 
 
       - name: Validate Terraform Configuration
