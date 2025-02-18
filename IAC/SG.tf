@@ -37,6 +37,6 @@ resource "aws_security_group" "microk8s_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
  tags = {
-    Name = "MicroK8s-Instance"
+    Name = "MicroK8sSG"
   }
 }
