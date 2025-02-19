@@ -72,7 +72,7 @@ jobs:
         id: kube-cluster-ip
         run: |
           echo $(terraform output -raw ec2_public_ip) > EC2_HOST
-          echo EC2_HOST
+          echo $EC2_HOST
         
   # Build-publish-app:
   #   name: App builder and publisher
