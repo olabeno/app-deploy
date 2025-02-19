@@ -9,12 +9,14 @@ on:
     paths:
       - IAC/**
       - app/**
+      - k8s/**
   pull_request:
     branches:
       - main
     paths:
       - IAC/**
       - app/**
+      - k8s/**
   
 jobs:
   terraform-construct:      
