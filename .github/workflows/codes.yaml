@@ -88,14 +88,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Login to AWS Public ECR
-        uses: appleboy/docker-ecr-action@master
-        with:
-          access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          registry: ${{ env.REGISTRY }}
-          region: ${{ env.AWS_REGION }}
-
       - name: Build and Push Docker Image to Public ECR
         uses: appleboy/docker-ecr-action@master
         with:
