@@ -101,7 +101,7 @@ jobs:
           daemon_off: false
           dockerfile: ./Dockerfile
           context: .
-    
+          working-directory: app
 
 
       
