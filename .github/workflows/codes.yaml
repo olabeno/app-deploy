@@ -80,23 +80,30 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      ECR_REPOSITORY: dprofileapp
-      #K8S_CLUSTER: ---
       AWS_REGION: us-east-1
-    
+      ECR_REPOSITORY: r3z5w8y3/dprofileapp  # Change to your AWS Public ECR alias
+      REGISTRY: public.ecr.aws  # AWS Public ECR Registry
+
     steps:
-      - name: code checkout
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: upload image to ECR
+      - name: Login to AWS Public ECR
         uses: appleboy/docker-ecr-action@master
         with:
           access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          secret_key:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           registry: ${{ env.REGISTRY }}
-            # cache_from: ${{ secrets.cache }}
-          repo: ${{ env.ECR_REPOSITORY }}
-          region:  ${{ env.AWS_REGION}}
+          region: ${{ env.AWS_REGION }}
+
+      - name: Build and Push Docker Image to Public ECR
+        uses: appleboy/docker-ecr-action@master
+        with:
+          access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          registry: ${{ env.REGISTRY }}
+          repository: ${{ env.ECR_REPOSITORY }}
+          region: ${{ env.AWS_REGION }}
           auto_tag: true
           daemon_off: false
           dockerfile: app/Dockerfile
