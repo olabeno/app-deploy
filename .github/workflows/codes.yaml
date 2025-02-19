@@ -80,7 +80,7 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      ECR_REPOSITORY: r3z5w8y3/dprofileapp
+      ECR_REPOSITORY: dprofileapp
       #K8S_CLUSTER: ---
       AWS_REGION: us-east-1
     
