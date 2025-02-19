@@ -101,6 +101,35 @@ jobs:
           dockerfile: app/Dockerfile
           context: app
           
+  # Deploying-app-on-k8s :
+  #   name: App deployment on microk8s
+  #   runs-on: ubuntu-latest 
+  #   steps: 
+  #   - name: Checkout repository 
+  #     uses: actions/checkout@v4
+
+  #   - name: Set up SSH connection
+  #     uses: appleboy/ssh-action@v0.1.10
+  #     with:
+  #       host: ${{ secrets.EC2_HOST }}
+  #       username: ${{ secrets.EC2_USER }}
+  #       key: ${{ secrets.EC2_SSH_KEY }}
+  #       script: |
+  #         microk8s kubectl apply -f ~/k8s/deployment.yaml
+  #         microk8s kubectl apply -f ~/k8s/service.yaml
+  #         microk8s kubectl get all
+  #         microk8s kubectl rollout status deployment my-app
+  #         microk8s kubectl get services
+
+  #   - name: Get NodePort
+  #     uses: appleboy/ssh-action@v0.1.10
+  #     with:
+  #       host: ${{ secrets.EC2_HOST }}
+  #       username: ${{ secrets.EC2_USER }}
+  #       key: ${{ secrets.EC2_SSH_KEY }}
+  #       script: |
+  #         NODE_PORT=$(microk8s kubectl get service my-app-service -o=jsonpath='{.spec.ports[0].nodePort}')
+  #         echo "Application accessible at: http://$(hostname -I | awk '{print $1}'):${NODE_PORT}"   
 
 
       
