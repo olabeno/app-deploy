@@ -99,9 +99,9 @@ jobs:
           region:  ${{ env.AWS_REGION}}
           auto_tag: true
           daemon_off: false
-          dockerfile: ./Dockerfile
-          context: .
-          working-directory: app
+          dockerfile: app/Dockerfile
+          context: app
+          
 
 
       
