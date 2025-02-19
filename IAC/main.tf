@@ -24,6 +24,7 @@ resource "aws_instance" "microk8s" {
     Name = "MicroK8s-Instance"
   }
 }
+##
 
 
 
