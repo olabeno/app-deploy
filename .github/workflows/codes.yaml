@@ -89,7 +89,7 @@ jobs:
           registry: ${{ secrets.REGISTRY }}
           username: ${{ secrets.AWS_ACCESS_KEY_ID }}
           password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_region: ${{env.AWS_REGION}}
+          #aws_region: ${{env.AWS_REGION}}
 
       - name: Build image
         run: |
