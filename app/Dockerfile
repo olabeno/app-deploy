@@ -1,5 +1,5 @@
 
-# Use the official Nginx base image
+# Use the official Nginx base image.
 FROM nginx:latest
 
 # Copy static website files (HTML, CSS, JS) into the default Nginx web directory
