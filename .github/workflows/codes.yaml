@@ -96,7 +96,7 @@ jobs:
           docker build -t dprofileapp .
           docker tag dprofileapp:latest ${{ secrets.REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
           docker push ${{ secrets.REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
-          working-directory: app
+          
         
 
       # - name: Docker login build and push Docker Image to Public ECR
