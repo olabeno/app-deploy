@@ -93,8 +93,7 @@ jobs:
 
       - name: Build image
         run: |
-          docker build -t dprofileapp .
-          docker tag dprofileapp:latest ${{ secrets.REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+          docker build . --tag ${{ secrets.REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest 
           docker push ${{ secrets.REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
           working-directory: app
           
