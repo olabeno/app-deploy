@@ -124,9 +124,9 @@ jobs:
   #   - name: Set up SSH connection
   #     uses: appleboy/ssh-action@v0.1.10
   #     with:
-  #       host: ${{ secrets.EC2_HOST }}
-  #       username: ${{ secrets.EC2_USER }}
-  #       key: ${{ secrets.EC2_SSH_KEY }}
+  #       host: ""
+  #       username: ubuntu
+  #       key: ${{ secrets.EC2_PRIVATE_KEY }}
   #       script: |
   #         microk8s kubectl apply -f ~/k8s/deployment.yaml
   #         microk8s kubectl apply -f ~/k8s/service.yaml
@@ -137,9 +137,9 @@ jobs:
   #   - name: Get NodePort
   #     uses: appleboy/ssh-action@v0.1.10
   #     with:
-  #       host: ${{ secrets.EC2_HOST }}
-  #       username: ${{ secrets.EC2_USER }}
-  #       key: ${{ secrets.EC2_SSH_KEY }}
+  #       host: ""
+  #       username: ubuntu
+  #       key: ${{ secrets.EC2_PRIVATE_KEY }}
   #       script: |
   #         NODE_PORT=$(microk8s kubectl get service my-app-service -o=jsonpath='{.spec.ports[0].nodePort}')
   #         echo "Application accessible at: http://$(hostname -I | awk '{print $1}'):${NODE_PORT}"   
