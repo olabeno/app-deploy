@@ -134,6 +134,16 @@ jobs:
   #         microk8s kubectl rollout status deployment my-app
   #         microk8s kubectl get services
 
+    # - name: Deploy to MicroK8s
+    #   uses: appleboy/ssh-action@v1.0.3
+    #   with:
+    #     host: ${{ secrets.EC2_HOST }}
+    #     username: ${{ secrets.EC2_USER }}
+    #     key: ${{ secrets.EC2_SSH_KEY }}
+    #     script: |
+    #       sudo microk8s kubectl apply -f /path/to/your/manifests
+    #       sudo microk8s kubectl rollout status deployment/your-deployment-name -n your-namespace
+  
   #   - name: Get NodePort
   #     uses: appleboy/ssh-action@v0.1.10
   #     with:
