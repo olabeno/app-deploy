@@ -135,11 +135,16 @@ jobs:
   #         microk8s kubectl get services
 
     # - name: Deploy to MicroK8s
+    #   env:
+    #     AWS_REGION: us-east-1
+    #     ECR_REPOSITORY: r3z5w8y3/dprofileapp
+        
     #   uses: appleboy/ssh-action@v1.0.3
     #   with:
-    #     host: ${{ secrets.EC2_HOST }}
-    #     username: ${{ secrets.EC2_USER }}
-    #     key: ${{ secrets.EC2_SSH_KEY }}
+    #     host: ""
+    #     username: ubuntu
+    #     key: ${{ secrets.EC2_PRIVATE_KEY }}
+    #     envs: AWS_REGION, ECR_REPOSITORY, ${{ secrets.AWS_ACCESS_KEY_ID }}, ${{ secrets.AWS_SECRET_ACCESS_KEY }}, ${{ secrets.REGISTRY }}    
     #     script: |
     #       sudo microk8s kubectl apply -f /path/to/your/manifests
     #       sudo microk8s kubectl rollout status deployment/your-deployment-name -n your-namespace
