@@ -15,7 +15,6 @@ resource "aws_instance" "microk8s" {
               sudo usermod -aG microk8s ubuntu
               sudo chown -R ubuntu ~/.kube
               microk8s status --wait-ready
-              microk8s enable dns dashboard storage
               unset https_proxy
               EOF
 
