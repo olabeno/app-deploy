@@ -16,9 +16,7 @@ resource "aws_instance" "microk8s" {
               sudo chown -R ubuntu ~/.kube
               microk8s status --wait-ready
               microk8s enable dns dashboard storage
-              unset http_proxy
               unset https_proxy
-              microk8s kubectl config view --raw > /home/ubuntu/.kube/config
               EOF
 
   tags = {
