@@ -9,14 +9,14 @@ on:
     paths:
       - IAC/**
       - app/**
-      - k8s/**
+      #- k8s/**
   pull_request:
     branches:
       - main
     paths:
       - IAC/**
       - app/**
-      - k8s/**
+      #- k8s/**
   
 jobs:
   # job-1
