@@ -6,3 +6,4 @@ COPY app1.html /usr/share/nginx/
 
 # Expose port 80 for HTTP traffic.
 EXPOSE 80
+##
