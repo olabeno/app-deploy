@@ -12,10 +12,11 @@ resource "aws_instance" "microk8s" {
               sudo apt update -y
               sudo apt install -y snapd
               sudo snap install microk8s --classic
+              sudo microk8s start
               sudo usermod -aG microk8s ubuntu
               sudo chown -R ubuntu ~/.kube
               microk8s status --wait-ready
-              unset https_proxy
+              microk8s disable dashboard dns hostpath-storage metrics-server
               EOF
 
   tags = {
