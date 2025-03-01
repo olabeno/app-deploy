@@ -1,6 +1,6 @@
 resource "aws_instance" "microk8s" {
   ami           = "ami-04b4f1a9cf54c11d0" 
-  instance_type = "t2.micro"
+  instance_type = "t3.micro"
   key_name      = "microk8s_key"
 
   associate_public_ip_address = true
