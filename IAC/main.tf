@@ -9,8 +9,8 @@ resource "aws_instance" "microk8s" {
 
   user_data = <<-EOF
               #!/bin/bash
-              sudo apt update -y
-              sudo apt install -y snapd
+              # Update system
+              sudo apt update -y && sudo apt upgrade -y
               sudo snap install microk8s --classic
               sudo microk8s start
               sudo usermod -aG microk8s ubuntu
