@@ -7,7 +7,7 @@ on:
       - main
       - dev-branch
     paths:
-      #- IAC/**
+      - IAC/**
       - app/**
       #- k8s/**
   pull_request:
